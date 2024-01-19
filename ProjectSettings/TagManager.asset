@@ -41,3 +41,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Backdrop
+    uniqueID: 1493632209
+    locked: 0
+  - name: Background Elements
+    uniqueID: 3855199991
+    locked: 0
+  - name: Lemmings
+    uniqueID: 908067207
+    locked: 0
+  - name: Player
+    uniqueID: 1245449455
+    locked: 0
+  - name: Foreground
+    uniqueID: 3300956017
+    locked: 0
+  - name: Walls
+    uniqueID: 4096522185
+    locked: 0
