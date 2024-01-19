@@ -11,6 +11,8 @@ public class LemmingLight : MonoBehaviour {
     [SerializeField, Range(MinIntensity, MaxIntensity)] private int _intensity = 3;
     [SerializeField] private GameObject _intensityPipPrefab;
 
+    public int Intensity => _intensity;
+
     private Coroutine _lightLerpHandle;
     private List<LemmingLightPip> _lightPips = new();
 
