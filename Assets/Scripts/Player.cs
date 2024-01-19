@@ -4,15 +4,22 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour {
+	[Header("Player Attributes")]
 	[SerializeField] private float _speed = 100;
 	[SerializeField] private float _movingDrag = 0.5f;
 	[SerializeField] private float _stoppingDrag = 2f;
 	[SerializeField] private float _maxSpeed = 10;
+
+	[Header("Carried Pips")]
 	[SerializeField] private float _pipOrbitRadius = 0.3f;
+	[SerializeField] private float _pipRotationSpeed = 180;
 	[SerializeField] private GameObject _pipPrefab;
 	[SerializeField] private Transform _pipParent;
-	[SerializeField] private float _pipRotationSpeed = 180;
+
+	[Header("Aim Line")]
 	[SerializeField] private LineRenderer _aimLine;
+	[SerializeField] private Transform _aimTarget;
+	[SerializeField] private LayerMask _aimLayer;
 
 	private int _carriedPips;
 	private LemmingLight _nearestLight;
@@ -33,11 +40,7 @@ public class Player : MonoBehaviour {
 			_aimLine.enabled = true;
 			_aimLine.positionCount = 2;
 
-			Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			mousePos.z = 0;
-
-			var hit = Physics2D.Raycast(transform.position, mousePos - transform.position, Mathf.Infinity, ~LayerMask.NameToLayer("Player"));
-			Debug.Log(hit.point);
+			var hit = Physics2D.Raycast(transform.position, _aimTarget.transform.position - transform.position, Mathf.Infinity, _aimLayer);
 			_aimLine.SetPosition(0, transform.position);
 			_aimLine.SetPosition(1, hit.point);
 		} else {
