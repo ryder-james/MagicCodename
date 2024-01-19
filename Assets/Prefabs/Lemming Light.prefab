@@ -92,6 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 441452779917052974}
   - component: {fileID: 441452779917052975}
+  - component: {fileID: 292095009626648185}
   m_Layer: 0
   m_Name: Lemming Light
   m_TagString: Untagged
@@ -131,6 +132,22 @@ MonoBehaviour:
   _intensity: 3
   _intensityPipPrefab: {fileID: 5288794880597891500, guid: b74c65eb2188d52419863e94aabcec25,
     type: 3}
+--- !u!58 &292095009626648185
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441452779917052972}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.7
 --- !u!1 &687790058415941622
 GameObject:
   m_ObjectHideFlags: 0

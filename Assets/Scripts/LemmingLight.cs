@@ -24,7 +24,7 @@ public class LemmingLight : MonoBehaviour {
         }
     }
 
-    public void UpdateIntensity(int newIntensity) {
+    private void UpdateIntensity(int newIntensity) {
         _intensity = Mathf.Clamp(newIntensity, MinIntensity, MaxIntensity);
         if (_lightLerpHandle != null) {
             StopCoroutine(_lightLerpHandle);
@@ -34,12 +34,18 @@ public class LemmingLight : MonoBehaviour {
         StartCoroutine(nameof(UpdatePips));
     }
 
-    public void LowerIntensity() {
+    public bool LowerIntensity() {
+        if (_intensity == MinIntensity)
+            return false;
         UpdateIntensity(_intensity - 1);
+        return true;
     }
 
-    public void RaiseIntensity() {
-        UpdateIntensity(_intensity + 1);
+    public bool RaiseIntensity() {
+		if (_intensity == MaxIntensity)
+			return false;
+		UpdateIntensity(_intensity + 1);
+        return true;
     }
 
     private IEnumerator LerpIntensity(int newIntensity, float transitionTime) {
