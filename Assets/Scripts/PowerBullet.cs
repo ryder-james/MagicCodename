@@ -1,24 +1,24 @@
 using UnityEngine;
 
 public class PowerBullet : MonoBehaviour {
-	public LemmingLight Source { get; set; }
+	public PowerSource Source { get; set; }
 
 	private void OnCollisionEnter2D(Collision2D collision) {
-		if (!collision.gameObject.TryGetComponent(out LemmingLight light)) {
-			Source.RaiseIntensity();
+		if (!collision.gameObject.TryGetComponent(out PowerSource item)) {
+			Source.Charges++;
 		} else {
-			light.RaiseIntensity();
+			item.Charges++;
 		}
 
 		Destroy(gameObject);
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision) {
-		if (!collision.gameObject.TryGetComponent(out LemmingLight light)) {
-			Source.RaiseIntensity();
+		if (!collision.gameObject.TryGetComponent(out PowerSource item)) {
+			Source.Charges++;
 			Destroy(gameObject);
-		} else if (light != Source) {
-			light.RaiseIntensity();
+		} else if (item != Source) {
+			item.Charges++;
 			Destroy(gameObject);
 		}
 	}

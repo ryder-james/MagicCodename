@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 488291307294925218}
   - component: {fileID: 393139185454289540}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 441452779917052974}
   - component: {fileID: 441452779917052975}
   - component: {fileID: 292095009626648185}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Lemming Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,8 +128,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ccf25d3de0d19d469d5bd0a8a478d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _minCharges: 0
+  _maxCharges: 5
+  _initialCharges: 3
   _light: {fileID: 393139185454289540}
-  _intensity: 3
   _intensityPipPrefab: {fileID: 5288794880597891500, guid: b74c65eb2188d52419863e94aabcec25,
     type: 3}
 --- !u!58 &292095009626648185
@@ -158,7 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4090470686695258325}
   - component: {fileID: 102192880238271214}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +245,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2524596563199881161}
   - component: {fileID: 4770171201304202127}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -328,7 +330,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2552658161938702713}
   - component: {fileID: 607910731830858080}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -413,7 +415,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3335616410137098386}
   - component: {fileID: 3957321805963479717}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -497,7 +499,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6328412167757361123}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}

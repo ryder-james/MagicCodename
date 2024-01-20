@@ -26,7 +26,7 @@ public class Player : MonoBehaviour {
 	[SerializeField] private LayerMask _aimLayer;
 
 	private int _carriedPips;
-	private LemmingLight _nearestLight;
+	private PowerSource _activePowerSource;
 	private Vector2 _movement;
 	private Rigidbody2D _rb;
 	private List<GameObject> _pips = new();
@@ -84,7 +84,7 @@ public class Player : MonoBehaviour {
 		RemovePip();
 		var bullet = Instantiate(_pipProjectilePrefab, transform.position + (AimDirection * _pipOrbitRadius), Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, 90) * AimDirection));
 		bullet.GetComponent<Rigidbody2D>().AddForce(AimDirection * _pipLaunchVelocity, ForceMode2D.Impulse);
-		bullet.GetComponent<PowerBullet>().Source = _nearestLight;
+		bullet.GetComponent<PowerBullet>().Source = _activePowerSource;
 	}
 
 	private void ResetPipPositions() {
@@ -109,32 +109,32 @@ public class Player : MonoBehaviour {
 
 	public void Steal(InputAction.CallbackContext ctx) {
 		if (ctx.phase == InputActionPhase.Performed) {
-			if (_nearestLight && _nearestLight.LowerIntensity()) {
+			if (_activePowerSource && _activePowerSource.TakeCharge()) {
 				AddPip();
 			}
 		}
 	}
 
 	private void OnTriggerEnter2D(Collider2D other) {
-		if (!other.TryGetComponent(out LemmingLight light))
+		if (!other.TryGetComponent(out PowerSource source))
 			return;
 
-		if (_nearestLight != null) {
-			if (Vector3.Distance(transform.position, light.transform.position) < Vector3.Distance(transform.position, _nearestLight.transform.position)) {
-				_nearestLight = light;
+		if (_activePowerSource != null) {
+			if (Vector3.Distance(transform.position, source.transform.position) < Vector3.Distance(transform.position, _activePowerSource.transform.position)) {
+				_activePowerSource = source;
 			}
 		} else {
-			_nearestLight = light;
+			_activePowerSource = source;
 		}
 	}
 
 	private void OnTriggerExit2D(Collider2D other) {
-		if (!other.TryGetComponent(out LemmingLight light))
+		if (!other.TryGetComponent(out PowerSource source))
 			return;
 
-		if (_nearestLight == null || _nearestLight != light)
+		if (_activePowerSource == null || _activePowerSource != source)
 			return;
 
-		_nearestLight = null;
+		_activePowerSource = null;
 	}
 }
