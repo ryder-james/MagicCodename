@@ -1860,11 +1860,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2497263912060142603, guid: a4f01a101a918854caf4af5f550fafa4,
-        type: 3}
-      propertyPath: m_Parameters.numCapVertices
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 3694070227703042116, guid: a4f01a101a918854caf4af5f550fafa4,
         type: 3}
       propertyPath: m_RootOrder

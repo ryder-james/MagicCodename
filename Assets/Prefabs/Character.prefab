@@ -292,6 +292,9 @@ MonoBehaviour:
   _pipPrefab: {fileID: 647054383006357036, guid: 4ea07b24808054642b5ce94e6a3d94d7,
     type: 3}
   _pipParent: {fileID: 4481002165344529302}
+  _pipLaunchVelocity: 5
+  _pipProjectilePrefab: {fileID: 1848371876031725922, guid: 4cbcc8ab31406044db11768719ecbc08,
+    type: 3}
   _aimLine: {fileID: 2497263912060142603}
   _aimTarget: {fileID: 3913670448508124435}
   _aimLayer:
@@ -5447,7 +5450,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 0
+    numCapVertices: 5
     alignment: 0
     textureMode: 0
     shadowBias: 0.5
