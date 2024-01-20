@@ -55,6 +55,11 @@ public class Player : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
+		if (_carriedPips > 0) {
+			_rb.drag = _stoppingDrag;
+			return;
+		}
+
 		_rb.drag = _movement == Vector2.zero ? _stoppingDrag : _movingDrag;
 
 		_rb.AddForce(_speed * Time.deltaTime * _movement);
@@ -79,6 +84,7 @@ public class Player : MonoBehaviour {
 		RemovePip();
 		var bullet = Instantiate(_pipProjectilePrefab, transform.position + (AimDirection * _pipOrbitRadius), Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, 90) * AimDirection));
 		bullet.GetComponent<Rigidbody2D>().AddForce(AimDirection * _pipLaunchVelocity, ForceMode2D.Impulse);
+		bullet.GetComponent<PowerBullet>().Source = _nearestLight;
 	}
 
 	private void ResetPipPositions() {
