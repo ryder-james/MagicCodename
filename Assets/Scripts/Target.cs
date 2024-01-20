@@ -5,6 +5,7 @@ using UnityEngine;
 public class Target : MonoBehaviour
 {
     [SerializeField, Range(0, 5)] private int priority = 0;
+    [SerializeField] private LemmingLight light;
     
     public int getPriority()
     {
@@ -21,5 +22,9 @@ public class Target : MonoBehaviour
         {
             Debug.LogWarning($"Tried to set priority of a {name} to {newprio} when the range is 0-5");
         }
+    }
+    private void Update()
+    {
+        setPriority(light.Intensity);
     }
 }

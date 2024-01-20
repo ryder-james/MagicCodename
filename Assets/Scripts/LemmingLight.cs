@@ -7,6 +7,8 @@ public class LemmingLight : PowerSource {
     [SerializeField] private Light2D _light;
     [SerializeField] private GameObject _intensityPipPrefab;
 
+    public int Intensity => _intensity;
+
     private Coroutine _lightLerpHandle;
     private List<LemmingLightPip> _lightPips = new();
 

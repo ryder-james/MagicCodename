@@ -46,7 +46,6 @@ public class LemingMove : MonoBehaviour
                     currentTarget = target.transform.position;
                     targetPriority = target.getPriority();
                     isScared = false;
-                    Debug.Log(target.name);
                 }
                 else
                 {
@@ -56,7 +55,6 @@ public class LemingMove : MonoBehaviour
                         currentTarget = target.transform.position;
                         targetPriority = target.getPriority();
                         isScared = false;
-                        Debug.Log(target.name);
                     }
                 }
             }
@@ -72,7 +70,6 @@ public class LemingMove : MonoBehaviour
             isScared = true;
         }
 
-        //transform.position = Vector2.MoveTowards(transform.position, currentTarget, Time.deltaTime * speed);
         Vector2 dir = new Vector2(currentTarget.x - transform.position.x , currentTarget.y - transform.position.y);
         rb.velocity = dir.normalized * speed;
 
