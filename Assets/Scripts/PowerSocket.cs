@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PowerSource : MonoBehaviour
+public class PowerSocket : MonoBehaviour
 {
 	[SerializeField, Min(0)] private int _minCharges = 0;
 	[SerializeField] private int _maxCharges = 5;
@@ -18,14 +18,22 @@ public class PowerSource : MonoBehaviour
 		{
 			if (_charges == value)
 				return;
-			_charges = value;
-			OnChargesUpdated(value);
+			_charges = Mathf.Clamp(value, MinCharges, MaxCharges);
+			OnChargesUpdated(_charges);
 		}
 	}
 
 	private void Awake()
 	{
 		Charges = InitialCharges;
+	}
+
+	public bool AddCharge()
+	{
+		if (Charges == MaxCharges)
+			return false;
+		Charges++;
+		return true;
 	}
 
 	public bool TakeCharge()

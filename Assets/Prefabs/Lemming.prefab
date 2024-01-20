@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 440143291592822317}
   - component: {fileID: 440143291592822319}
   - component: {fileID: 440143291592822316}
-  m_Layer: 2
+  m_Layer: 10
   m_Name: Lemming
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,6 +50,9 @@ MonoBehaviour:
   _speed: 5
   _randomTimeMin: 2
   _randomTimeMax: 5
+  _raycastIgnore:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!50 &440143291592822319
 Rigidbody2D:
   serializedVersion: 4
@@ -97,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 382516925813985975}
   - component: {fileID: 8508715812527446579}
-  m_Layer: 2
+  m_Layer: 10
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,7 +184,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3363543648134151860}
-  m_Layer: 2
+  m_Layer: 10
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}

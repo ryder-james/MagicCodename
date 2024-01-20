@@ -6,6 +6,7 @@ public class LemmingMove : MonoBehaviour
 	[SerializeField] private int _speed = 5;
 	[SerializeField] private int _randomTimeMin = 2;
 	[SerializeField] private int _randomTimeMax = 5;
+	[SerializeField] private LayerMask _raycastIgnore;
 
 	private Rigidbody2D _rb;
 	private Vector3 _currentTarget = Vector3.zero;
@@ -36,7 +37,7 @@ public class LemmingMove : MonoBehaviour
 			if (disToNewTarget > target.Priority)
 				continue;
 
-			RaycastHit2D hit = Physics2D.Raycast(transform.position, (target.transform.position - transform.position));
+			RaycastHit2D hit = Physics2D.Raycast(transform.position, (target.transform.position - transform.position), Mathf.Infinity, ~_raycastIgnore);
 			//check if there is a obstical between lemming and target
 			if (hit.collider.gameObject != target.gameObject)
 				continue;

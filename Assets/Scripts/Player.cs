@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private Transform _aimTarget;
 	[SerializeField] private LayerMask _aimLayer;
 
-	private PowerSource _activePowerSource;
+	private PowerSocket _activePowerSocket;
 	private Rigidbody2D _rb;
 	private List<GameObject> _pips = new();
 	private Vector2 _movement;
@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
 		RemovePip();
 		var bullet = Instantiate(_pipProjectilePrefab, transform.position + (AimDirection * _pipOrbitRadius), Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, 90) * AimDirection));
 		bullet.GetComponent<Rigidbody2D>().AddForce(AimDirection * _pipLaunchVelocity, ForceMode2D.Impulse);
-		bullet.GetComponent<PowerBullet>().Source = _activePowerSource;
+		bullet.GetComponent<PowerBullet>().SourceSocket = _activePowerSocket;
 	}
 
 	private void ResetPipPositions()
@@ -128,34 +128,34 @@ public class Player : MonoBehaviour
 		if (ctx.phase != InputActionPhase.Performed)
 			return;
 
-		if (_activePowerSource && _activePowerSource.TakeCharge())
+		if (_activePowerSocket && _activePowerSocket.TakeCharge())
 			AddPip();
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (!other.TryGetComponent(out PowerSource source))
+		if (!other.TryGetComponent(out PowerSocket socket))
 			return;
 
-		if (_activePowerSource != null)
+		if (_activePowerSocket != null)
 		{
-			if (Vector3.Distance(transform.position, source.transform.position) < Vector3.Distance(transform.position, _activePowerSource.transform.position))
-				_activePowerSource = source;
+			if (Vector3.Distance(transform.position, socket.transform.position) < Vector3.Distance(transform.position, _activePowerSocket.transform.position))
+				_activePowerSocket = socket;
 		}
 		else
 		{
-			_activePowerSource = source;
+			_activePowerSocket = socket;
 		}
 	}
 
 	private void OnTriggerExit2D(Collider2D other)
 	{
-		if (!other.TryGetComponent(out PowerSource source))
+		if (!other.TryGetComponent(out PowerSocket socket))
 			return;
 
-		if (_activePowerSource == null || _activePowerSource != source)
+		if (_activePowerSocket == null || _activePowerSocket != socket)
 			return;
 
-		_activePowerSource = null;
+		_activePowerSocket = null;
 	}
 }

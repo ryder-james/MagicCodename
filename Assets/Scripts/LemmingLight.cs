@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class LemmingLight : PowerSource
+public class LemmingLight : PowerSocket
 {
 	[SerializeField] private Light2D _light;
 	[SerializeField] private GameObject _intensityPipPrefab;
 
 	private Coroutine _lightLerpHandle;
 	private List<LemmingLightPip> _lightPips = new();
+	private bool _initializing = true;
 
 	private void Start()
 	{
@@ -21,6 +22,8 @@ public class LemmingLight : PowerSource
 			newLight.Enabled = i < InitialCharges;
 			_lightPips.Add(newLight);
 		}
+
+		_initializing = false;
 	}
 
 	protected override void OnChargesUpdated(int newCharges)
@@ -36,6 +39,8 @@ public class LemmingLight : PowerSource
 
 	private IEnumerator LerpIntensity(int newIntensity, float transitionTime)
 	{
+		yield return new WaitUntil(() => !_initializing);
+
 		float start = _light.pointLightOuterRadius;
 		float diff = newIntensity - start;
 		if (diff == 0)
@@ -54,10 +59,12 @@ public class LemmingLight : PowerSource
 
 	private IEnumerator UpdatePips()
 	{
+		yield return new WaitUntil(() => !_initializing);
+
 		for (int i = MaxCharges - 1; i >= 0; i--)
 		{
 			_lightPips[i].Enabled = i < Charges;
-			yield return new WaitForSeconds(0.2f);
+			yield return new WaitForSeconds(0.1f);
 		}
 	}
 

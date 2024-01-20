@@ -1,12 +1,13 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Target : MonoBehaviour
 {
-	[SerializeField] private PowerSource _source;
+	[SerializeField, FormerlySerializedAs("_source")] private PowerSocket _sourceSocket;
 
 	public int Priority
 	{
-		get => _source.Charges;
-		set => _source.Charges = value;
+		get => _sourceSocket.Charges;
+		set => _sourceSocket.Charges = value;
 	}
 }
