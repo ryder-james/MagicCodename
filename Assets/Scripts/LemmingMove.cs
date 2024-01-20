@@ -102,7 +102,18 @@ public class LemmingMove : MonoBehaviour
 			float distanceToNewTarget = Vector3.Distance(target.transform.position, transform.position);
 
 			// If the target has a higher importance or if it's just closer (or if we're ignoring priority), pick it instead
-			if ((considerPriority && (target.Priority > targetPriority)) || distanceToNewTarget < distanceToTarget)
+			bool higherPriority = target.Priority > targetPriority;
+			bool closer = distanceToNewTarget < distanceToTarget;
+			if (considerPriority)
+			{
+				if (higherPriority || (target.Priority == targetPriority && closer))
+				{
+					result = target;
+					distanceToTarget = distanceToNewTarget;
+					targetPriority = target.Priority;
+				}
+			}
+			else if (closer)
 			{
 				result = target;
 				distanceToTarget = distanceToNewTarget;

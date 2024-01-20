@@ -4,7 +4,7 @@ public class PowerSocket : MonoBehaviour
 {
 	[SerializeField, Min(0)] private int _minCharges = 0;
 	[SerializeField] private int _maxCharges = 5;
-	[SerializeField] private int _initialCharges = 3;
+	[SerializeField, DynamicRange(nameof(_minCharges), nameof(_maxCharges))] private int _initialCharges = 3;
 
 	protected int MinCharges => _minCharges;
 	protected int MaxCharges => _maxCharges;
