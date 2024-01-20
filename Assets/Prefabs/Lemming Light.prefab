@@ -92,6 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 441452779917052974}
   - component: {fileID: 441452779917052975}
+  - component: {fileID: 3856120451931641143}
   - component: {fileID: 292095009626648185}
   m_Layer: 7
   m_Name: Lemming Light
@@ -134,6 +135,19 @@ MonoBehaviour:
   _light: {fileID: 393139185454289540}
   _intensityPipPrefab: {fileID: 5288794880597891500, guid: b74c65eb2188d52419863e94aabcec25,
     type: 3}
+--- !u!114 &3856120451931641143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441452779917052972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ee91f47c0a0354787faf5f6f86ef3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _source: {fileID: 441452779917052975}
 --- !u!58 &292095009626648185
 CircleCollider2D:
   m_ObjectHideFlags: 0
