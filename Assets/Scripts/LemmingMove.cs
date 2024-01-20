@@ -1,19 +1,34 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class LemmingMove : MonoBehaviour
 {
-	[SerializeField] private int _speed = 5;
-	[SerializeField] private int _randomTimeMin = 2;
-	[SerializeField] private int _randomTimeMax = 5;
-	[SerializeField] private LayerMask _raycastIgnore;
+	[SerializeField, Min(0.1f)] private int _speed = 5;
+	[SerializeField, Min(0.1f)] private int _randomTimeMin = 2;
+	[SerializeField, Min(0.2f)] private int _randomTimeMax = 5;
+	[SerializeField, Min(0.1f)] private float _arrivedDistance = 0.5f;
+	[SerializeField, Min(0)] private float _calmVisionDistance = 3;
+	[SerializeField, Min(0)] private float _scaredVisionDistance = Mathf.Infinity;
+	[SerializeField] private LayerMask _raycastBlockers;
 
+	private Target[] _allTargets;
 	private Rigidbody2D _rb;
-	private Vector3 _currentTarget = Vector3.zero;
+	private Target _target;
+
 	private float _randTime = 2.0f;
 	private float _timeElapsed = 0.0f;
-	private int _targetPriority = 0;
-	private bool _isScared = true;
+
+	private bool HasTarget => _target != null;
+	private bool IsScared => !HasTarget;
+
+	private Vector3 _moveTarget;
+	private Vector3 MoveTarget
+	{
+		get => _target ? _target.transform.position : _moveTarget;
+		set => _moveTarget = value;
+	}
 
 	private void Awake()
 	{
@@ -22,67 +37,112 @@ public class LemmingMove : MonoBehaviour
 
 	private void Start()
 	{
-		_currentTarget = transform.position;
+		MoveTarget = transform.position;
+		_allTargets = FindObjectsOfType<Target>();
 	}
 
 	private void Update()
 	{
-		foreach (Target target in FindObjectsOfType<Target>()/*.Select(t => t.transform.position)*/)
+		if (HasTarget && _target.Priority == 0)
+			_target = null;
+
+		_target = PickTarget(HasTarget);
+
+		if (IsScared)
 		{
-			if (target.Priority < _targetPriority)
-				continue;
-
-			float disToNewTarget = Vector3.Distance(transform.position, target.transform.position);
-			//check if lemming can see target
-			if (disToNewTarget > target.Priority)
-				continue;
-
-			RaycastHit2D hit = Physics2D.Raycast(transform.position, (target.transform.position - transform.position), Mathf.Infinity, ~_raycastIgnore);
-			//check if there is a obstical between lemming and target
-			if (hit.collider.gameObject != target.gameObject)
-				continue;
-
-			//checks to see if new target has a higher priority or if it is closer
-			if (target.Priority > _targetPriority)
-			{
-				_currentTarget = target.transform.position;
-				_targetPriority = target.Priority;
-				_isScared = false;
-			}
-			else
-			{
-				float disToCurTarget = Vector3.Distance(transform.position, _currentTarget);
-				if (disToNewTarget >= disToCurTarget)
-					continue;
-
-				_currentTarget = target.transform.position;
-				_targetPriority = target.Priority;
-				_isScared = false;
-			}
-		}
-		//end foreach
-		//move lemming
-
-		if (_currentTarget == transform.position)
-		{
-			_currentTarget = new Vector3(transform.position.x + (Random.Range(-1, 2) * 100), transform.position.y + (Random.Range(-1, 2) * 100), 0);
+			MoveTarget = new Vector3(transform.position.x + (Random.Range(-1, 2) * 100), transform.position.y + (Random.Range(-1, 2) * 100), 0);
 			_randTime = Random.Range(_randomTimeMin, _randomTimeMax);
 			_timeElapsed = 0.0f;
-			_isScared = true;
 		}
 
-		Vector2 dir = new Vector2(_currentTarget.x - transform.position.x, _currentTarget.y - transform.position.y);
-		_rb.velocity = dir.normalized * _speed;
+		if (Vector3.Distance(transform.position, MoveTarget) > _arrivedDistance)
+		{
+			Vector2 dir = MoveTarget - transform.position;
+			_rb.velocity = dir.normalized * _speed;
+		}
+		else
+		{
+			_rb.velocity = Vector3.zero;
+		}
 
-		if (_timeElapsed < _randTime && _isScared)
+		if (_timeElapsed < _randTime && IsScared)
 		{
 			_timeElapsed += Time.deltaTime;
 		}
 		else
 		{
-			_currentTarget = transform.position;
-			_targetPriority = 0;
+			MoveTarget = transform.position;
 		}
 
 	}
+
+	private Target PickTarget(bool considerPriority)
+	{
+		float visionDistance = IsScared ? _scaredVisionDistance : _calmVisionDistance;
+
+		Target result = _target;
+
+		int targetPriority = HasTarget ? _target.Priority : int.MinValue;
+		float distanceToTarget = HasTarget ? Vector3.Distance(transform.position, MoveTarget) : Mathf.Infinity;
+
+		List<Target> _viableTargets = _allTargets.Where(target => ConsiderTarget(target, visionDistance, considerPriority)).ToList();
+
+		// If there's only one viable target, shortcut out.
+		if (_viableTargets.Count == 1)
+			return _viableTargets[0];
+
+		// Filter out every target with a lower priority than our current, then
+		//   find every Target which is "visible" to our Lemming (where the
+		//   Light radius intersects our Vision radius)
+		foreach (Target target in _viableTargets)
+		{
+			if (target == _target)
+				continue;
+
+			float distanceToNewTarget = Vector3.Distance(target.transform.position, transform.position);
+
+			// If the target has a higher importance or if it's just closer (or if we're ignoring priority), pick it instead
+			if ((considerPriority && (target.Priority > targetPriority)) || distanceToNewTarget < distanceToTarget)
+			{
+				result = target;
+				distanceToTarget = distanceToNewTarget;
+				targetPriority = target.Priority;
+			}
+		}
+
+		return result;
+
+		bool ConsiderTarget(Target t, float visionDistance, bool considerPriority)
+		{
+			bool priorityIsHighEnough = t.Priority > 0 && (!considerPriority || !HasTarget || t.Priority >= _target.Priority);
+			if (!priorityIsHighEnough)
+				return false;
+
+			if (t == _target)
+				return true;
+
+			bool radiiOverlap = Utility.OverlapCircle(t.transform.position, t.Priority, transform.position, visionDistance);
+			if (!radiiOverlap)
+				return false;
+			
+			// Check if there's a wall or other RaycastBlocker between us and the target
+			var raycastHit = Physics2D.Raycast(transform.position, t.transform.position - transform.position, Mathf.Infinity, _raycastBlockers);
+			bool hasLOS = !raycastHit;
+			if (!hasLOS)
+				return false;
+
+			return true;
+		}
+	}
+
+#if UNITY_EDITOR
+	private void OnDrawGizmosSelected()
+	{
+		float distance = IsScared ? _scaredVisionDistance : _calmVisionDistance;
+		if (distance == Mathf.Infinity)
+			return;
+
+		Gizmos.DrawWireSphere(transform.position, distance);
+	}
+#endif
 }
