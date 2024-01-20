@@ -12,14 +12,52 @@ MonoBehaviour:
   m_Script: {fileID: 13966, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: LevelTemplate
   m_EditorClassIdentifier: 
-  templateScene: {fileID: 102900000, guid: f8ae53d765595cb4f81b69df03364b53, type: 3}
+  templateScene: {fileID: 102900000, guid: a91959452b68ada4f9564e0ca1829b4d, type: 3}
   templateName: Default Level Template
   description: 
   preview: {fileID: 0}
   dependencies:
+  - dependency: {fileID: 3694070227703042117, guid: a4f01a101a918854caf4af5f550fafa4,
+      type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2100000, guid: 7a534a7cf5c90dc47bb2c4514bfcc51e, type: 2}
+    instantiationMode: 0
+  - dependency: {fileID: 1583734034275271462, guid: 9e7b7b145cb21e04681928f4b6eb3715,
+      type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: -944628639613478452, guid: 6161a65a3f3b888449492f25b0318be6,
+      type: 3}
+    instantiationMode: 1
   - dependency: {fileID: 1402675333560298256, guid: c04b9652efb9e324186642f3ed581b81,
       type: 3}
     instantiationMode: 1
+  - dependency: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+    instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    instantiationMode: 0
+  - dependency: {fileID: 440143291592822318, guid: 93bdd39a78b0d3349aa142945e1517cb,
+      type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 5288794880597891500, guid: b74c65eb2188d52419863e94aabcec25,
+      type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: 40265a896a0f341bb956e90c59025a29, type: 3}
+    instantiationMode: 1
+  - dependency: {fileID: 441452779917052972, guid: 7a757c865826f4c42ba999486665f3f6,
+      type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 647054383006357036, guid: 4ea07b24808054642b5ce94e6a3d94d7,
+      type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 1848371876031725922, guid: 4cbcc8ab31406044db11768719ecbc08,
+      type: 3}
+    instantiationMode: 0
   templatePipeline: {fileID: 0}
   badge: {fileID: 0}
   addToDefaults: 0
