@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 public class Target : MonoBehaviour
 {
 	[SerializeField] private Transform _homingPoint;
-	[SerializeField, FormerlySerializedAs("_source")] private PowerSocket _sourceSocket;
+	[SerializeField, FormerlySerializedAs("_source")] private PoweredItem _sourceSocket;
 
 	public Vector3 HomingPoint => _homingPoint.position;
 

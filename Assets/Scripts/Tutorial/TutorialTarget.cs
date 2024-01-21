@@ -32,7 +32,7 @@ public class TutorialTarget : MonoBehaviour
 				Destroy(this);
 			break;
 		case TargetType.Lemming:
-			if (!collision.TryGetComponent(out LemmingMove lemming))
+			if (!collision.TryGetComponent(out Lemming lemming))
 				return;
 
 			if (_tutorial.TargetHit(this))

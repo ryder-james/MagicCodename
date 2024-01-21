@@ -1,10 +1,12 @@
 using UnityEngine;
 
-public class PowerSocket : MonoBehaviour
+public class PoweredItem : MonoBehaviour
 {
 	[SerializeField, Min(0)] private int _minCharges = 0;
 	[SerializeField] private int _maxCharges = 5;
 	[SerializeField, DynamicRange(nameof(_minCharges), nameof(_maxCharges))] private int _charges = 3;
+
+	public event System.Action<int, int> OnChargesUpdated;
 
 	public int MinCharges => _minCharges;
 	public int MaxCharges => _maxCharges;
@@ -18,7 +20,8 @@ public class PowerSocket : MonoBehaviour
 		{
 			int oldCharges = _charges;
 			_charges = Mathf.Clamp(value, MinCharges, MaxCharges);
-			OnChargesUpdated(oldCharges, _charges);
+			UpdateCharges(oldCharges, _charges);
+			OnChargesUpdated?.Invoke(oldCharges, _charges);
 		}
 	}
 
@@ -38,7 +41,7 @@ public class PowerSocket : MonoBehaviour
 		return true;
 	}
 
-	protected virtual void OnChargesUpdated(int oldCharges, int newCharges)
+	protected virtual void UpdateCharges(int oldCharges, int newCharges)
 	{
 
 	}

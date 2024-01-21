@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class LemmingMove : MonoBehaviour
+public class Lemming : MonoBehaviour
 {
 	public enum LemmingState
 	{
@@ -164,9 +164,10 @@ public class LemmingMove : MonoBehaviour
 			bool radiiOverlap = Utility.OverlapCircle(t.HomingPoint, t.Priority, transform.position, visionDistance);
 			if (!radiiOverlap)
 				return false;
-			
+
 			// Check if there's a wall or other RaycastBlocker between us and the target
-			var raycastHit = Physics2D.Raycast(transform.position, t.HomingPoint - transform.position, Mathf.Infinity, _raycastBlockers);
+			float distToTarget = Vector3.Distance(transform.position, t.HomingPoint);
+			var raycastHit = Physics2D.Raycast(transform.position, t.HomingPoint - transform.position, distToTarget, _raycastBlockers);
 			bool hasLOS = !raycastHit;
 			if (!hasLOS)
 				return false;
