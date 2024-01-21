@@ -149,7 +149,7 @@ public class LemmingMove : MonoBehaviour
 #if UNITY_EDITOR
 	private void OnDrawGizmosSelected()
 	{
-		float distance = IsScared ? _scaredVisionDistance : _calmVisionDistance;
+		float distance = (Application.IsPlaying(gameObject) && IsScared) ? _scaredVisionDistance : _calmVisionDistance;
 		if (distance == Mathf.Infinity)
 			return;
 

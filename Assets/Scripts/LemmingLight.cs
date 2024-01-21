@@ -14,9 +14,9 @@ public class LemmingLight : PowerSocket
 
 	private void Start()
 	{
-		for (int i = 0; i < MaxCharges; i++)
+		for (int i = 0; i < MaxCharges - MinCharges; i++)
 		{
-			Vector3 pos = new(-0.2f + (0.1f * i), -0.3f, 0);
+			Vector3 pos = Vector3.Lerp(new Vector3(-0.2f, -0.5f, 0), new Vector3(0.2f, -0.5f, 0), (i + 0.5f) / (MaxCharges - MinCharges));
 			var newLight = Instantiate(_intensityPipPrefab, transform).GetComponent<LemmingLightPip>();
 			newLight.transform.localPosition = pos;
 			newLight.Enabled = i < InitialCharges;
@@ -61,9 +61,9 @@ public class LemmingLight : PowerSocket
 	{
 		yield return new WaitUntil(() => !_initializing);
 
-		for (int i = MaxCharges - 1; i >= 0; i--)
+		for (int i = MaxCharges - MinCharges - 1; i >= 0; i--)
 		{
-			_lightPips[i].Enabled = i < Charges;
+			_lightPips[i].Enabled = (i + MinCharges) < Charges;
 			yield return new WaitForSeconds(0.1f);
 		}
 	}
