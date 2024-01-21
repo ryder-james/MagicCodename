@@ -14,19 +14,19 @@ public class LemmingLight : PowerSocket
 
 	private void Start()
 	{
-		for (int i = 0; i < MaxCharges - MinCharges; i++)
+		for (int i = 0; i < MaxCharges; i++)
 		{
-			Vector3 pos = Vector3.Lerp(new Vector3(-0.2f, -0.5f, 0), new Vector3(0.2f, -0.5f, 0), (i + 0.5f) / (MaxCharges - MinCharges));
+			Vector3 pos = Vector3.Lerp(new Vector3(-0.2f, -0.5f, 0), new Vector3(0.2f, -0.5f, 0), (i + 0.5f) / MaxCharges);
 			var newLight = Instantiate(_intensityPipPrefab, transform).GetComponent<LemmingLightPip>();
 			newLight.transform.localPosition = pos;
-			newLight.Enabled = i < InitialCharges;
+			newLight.State = i < MinCharges ? LemmingLightPip.PipState.Locked : i < Charges ? LemmingLightPip.PipState.Enabled : LemmingLightPip.PipState.Disabled;
 			_lightPips.Add(newLight);
 		}
 
 		_initializing = false;
 	}
 
-	protected override void OnChargesUpdated(int newCharges)
+	protected override void OnChargesUpdated(int oldCharges, int newCharges)
 	{
 		if (_lightLerpHandle != null)
 		{
@@ -34,7 +34,7 @@ public class LemmingLight : PowerSocket
 			StopCoroutine(nameof(UpdatePips));
 		}
 		_lightLerpHandle = StartCoroutine(LerpIntensity(Charges, 0.5f));
-		StartCoroutine(nameof(UpdatePips));
+		StartCoroutine(UpdatePips(newCharges > oldCharges));
 	}
 
 	private IEnumerator LerpIntensity(int newIntensity, float transitionTime)
@@ -57,14 +57,25 @@ public class LemmingLight : PowerSocket
 		_lightLerpHandle = null;
 	}
 
-	private IEnumerator UpdatePips()
+	private IEnumerator UpdatePips(bool chargesIncreasing)
 	{
 		yield return new WaitUntil(() => !_initializing);
 
-		for (int i = MaxCharges - MinCharges - 1; i >= 0; i--)
+		if (chargesIncreasing)
 		{
-			_lightPips[i].Enabled = (i + MinCharges) < Charges;
-			yield return new WaitForSeconds(0.1f);
+			for (int i = 0; i < MaxCharges; i++)
+			{
+				_lightPips[i].State = i < MinCharges ? LemmingLightPip.PipState.Locked : i < Charges ? LemmingLightPip.PipState.Enabled : LemmingLightPip.PipState.Disabled;
+				yield return new WaitForSeconds(0.1f);
+			}
+		}
+		else
+		{
+			for (int i = MaxCharges - 1; i >= 0; i--)
+			{
+				_lightPips[i].State = i < MinCharges ? LemmingLightPip.PipState.Locked : i < Charges ? LemmingLightPip.PipState.Enabled : LemmingLightPip.PipState.Disabled;
+				yield return new WaitForSeconds(0.1f);
+			}
 		}
 	}
 
@@ -74,7 +85,7 @@ public class LemmingLight : PowerSocket
 		if (!_light)
 			return;
 
-		_light.pointLightOuterRadius = InitialCharges;
+		_light.pointLightOuterRadius = Charges;
 	}
 #endif
 }

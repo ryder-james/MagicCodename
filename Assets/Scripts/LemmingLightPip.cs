@@ -3,54 +3,75 @@ using UnityEngine;
 
 public class LemmingLightPip : MonoBehaviour
 {
-	[SerializeField] private bool _enabled = true;
-	[SerializeField] private GameObject _indicator;
+	public enum PipState
+	{
+		Disabled,
+		Enabled,
+		Locked
+	}
+
+	[SerializeField] private PipState _state = PipState.Disabled;
+	[SerializeField] private SpriteRenderer _indicator;
+	[SerializeField, ColorUsage(false)] private Color _enabledColor, _lockedColor;
+	[SerializeField, Range(0.05f, 0.1f)] private float _indicatorScale;
 	[SerializeField, Range(0, 1)] private float _transitionTime = 0.3f;
 
-	private Coroutine _toggleHandle;
+	private Coroutine _stateUpdateHandle;
 
-	public bool Enabled
+	public PipState State
 	{
-		get => _enabled;
+		get => _state;
 		set
 		{
-			if (_enabled == value)
+			if (_state == value)
 				return;
-			_enabled = value;
-			if (_toggleHandle != null)
-				StopCoroutine(_toggleHandle);
-			_toggleHandle = StartCoroutine(Toggle(_enabled));
+
+			_state = value;
+			if (_stateUpdateHandle != null)
+				StopCoroutine(_stateUpdateHandle);
+			_stateUpdateHandle = StartCoroutine(UpdateVisualState());
 		}
 	}
 
-	private float _enabledSize;
-
-	private void Awake()
+	private IEnumerator UpdateVisualState()
 	{
-		_enabledSize = _indicator.transform.localScale.x;
-	}
+		bool turningOn = false;
+		if (State != PipState.Disabled)
+		{
+			_indicator.color = State == PipState.Enabled ? _enabledColor : _lockedColor;
+			turningOn = true;
+		}
 
-	private void Start()
-	{
-		_indicator.transform.localScale = _enabled ? Vector3.one * _enabledSize : Vector3.zero;
-	}
+		float startSize = turningOn ? 0 : _indicatorScale;
+		float endSize = turningOn ? _indicatorScale : 0;
 
-	[ContextMenu(nameof(Toggle))]
-	public void Toggle()
-	{
-		Enabled = !Enabled;
-	}
-
-	private IEnumerator Toggle(bool enabled)
-	{
-		float startSize = _indicator.transform.localScale.x;
-		float endSize = enabled ? _enabledSize : 0;
 		for (float t = 0; t < _transitionTime; t += Time.deltaTime)
 		{
 			_indicator.transform.localScale = Mathf.Lerp(startSize, endSize, t / _transitionTime) * Vector3.one;
 			yield return new WaitForEndOfFrame();
 		}
+
 		_indicator.transform.localScale = Vector3.one * endSize;
-		_toggleHandle = null;
+		_stateUpdateHandle = null;
 	}
+
+#if UNITY_EDITOR
+	private void OnValidate()
+	{
+		_enabledColor.a = 1;
+		_lockedColor.a = 1;
+
+		switch (State)
+		{
+		case PipState.Disabled:
+			_indicator.transform.localScale = Vector3.zero;
+			break;
+		case PipState.Enabled:
+		case PipState.Locked:
+			_indicator.transform.localScale = Vector3.one * _indicatorScale;
+			_indicator.color = State == PipState.Enabled ? _enabledColor : _lockedColor;
+			break;
+		}
+	}
+#endif
 }
