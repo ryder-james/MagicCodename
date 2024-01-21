@@ -5,6 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class LemmingMove : MonoBehaviour
 {
+	public enum LemmingState
+	{
+		NoLight,
+		HeadingToLight,
+		HeadingToBetterLight,
+		AtLight
+	}
+
 	[SerializeField, Min(0.1f)] private int _speed = 5;
 	[SerializeField, Min(0.1f)] private int _randomTimeMin = 2;
 	[SerializeField, Min(0.2f)] private int _randomTimeMax = 5;
@@ -19,6 +27,8 @@ public class LemmingMove : MonoBehaviour
 
 	private float _randTime = 2.0f;
 	private float _timeElapsed = 0.0f;
+
+	public LemmingState State { get; private set; }
 
 	private bool HasTarget => _target != null;
 	private bool IsScared => !HasTarget;
@@ -63,6 +73,8 @@ public class LemmingMove : MonoBehaviour
 		else
 		{
 			_rb.velocity = Vector3.zero;
+			if (HasTarget)
+				State = LemmingState.AtLight;
 		}
 
 		if (_timeElapsed < _randTime && IsScared)
@@ -89,36 +101,53 @@ public class LemmingMove : MonoBehaviour
 
 		// If there's only one viable target, shortcut out.
 		if (_viableTargets.Count == 1)
-			return _viableTargets[0];
-
-		// Filter out every target with a lower priority than our current, then
-		//   find every Target which is "visible" to our Lemming (where the
-		//   Light radius intersects our Vision radius)
-		foreach (Target target in _viableTargets)
 		{
-			if (target == _target)
-				continue;
-
-			float distanceToNewTarget = Vector3.Distance(target.transform.position, transform.position);
-
-			// If the target has a higher importance or if it's just closer (or if we're ignoring priority), pick it instead
-			bool higherPriority = target.Priority > targetPriority;
-			bool closer = distanceToNewTarget < distanceToTarget;
-			if (considerPriority)
+			result = _viableTargets[0];
+		}
+		else
+		{
+			// Filter out every target with a lower priority than our current, then
+			//   find every Target which is "visible" to our Lemming (where the
+			//   Light radius intersects our Vision radius)
+			foreach (Target target in _viableTargets)
 			{
-				if (higherPriority || (target.Priority == targetPriority && closer))
+				if (target == _target)
+					continue;
+
+				float distanceToNewTarget = Vector3.Distance(target.transform.position, transform.position);
+
+				// If the target has a higher importance or if it's just closer (or if we're ignoring priority), pick it instead
+				bool higherPriority = target.Priority > targetPriority;
+				bool closer = distanceToNewTarget < distanceToTarget;
+				if (considerPriority)
+				{
+					if (higherPriority || (target.Priority == targetPriority && closer))
+					{
+						result = target;
+						distanceToTarget = distanceToNewTarget;
+						targetPriority = target.Priority;
+					}
+				}
+				else if (closer)
 				{
 					result = target;
 					distanceToTarget = distanceToNewTarget;
 					targetPriority = target.Priority;
 				}
 			}
-			else if (closer)
-			{
-				result = target;
-				distanceToTarget = distanceToNewTarget;
-				targetPriority = target.Priority;
-			}
+		}
+
+		if (result == null)
+		{
+			State = LemmingState.NoLight;
+		}
+		else if (_target == null)
+		{
+			State = LemmingState.HeadingToLight;
+		}
+		else if (_target == result)
+		{
+			State = LemmingState.HeadingToBetterLight;
 		}
 
 		return result;

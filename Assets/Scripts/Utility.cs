@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Utility {
@@ -18,5 +19,11 @@ public static class Utility {
 		float dist = Vector2.Distance(pos1, pos2);
 
 		return dist <= rDiff || dist <= rSum;
+	}
+
+	public static void SetActive(this IEnumerable<GameObject> gameObjects, bool active)
+	{
+		foreach (GameObject obj in gameObjects)
+			obj.SetActive(active);
 	}
 }
