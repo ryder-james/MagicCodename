@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class LemmingMove : MonoBehaviour
+public class Lemming : MonoBehaviour
 {
 	public enum LemmingState
 	{
@@ -36,7 +36,7 @@ public class LemmingMove : MonoBehaviour
 	private Vector3 _moveTarget;
 	private Vector3 MoveTarget
 	{
-		get => _target ? _target.transform.position : _moveTarget;
+		get => _target ? _target.HomingPoint : _moveTarget;
 		set => _moveTarget = value;
 	}
 
@@ -114,7 +114,7 @@ public class LemmingMove : MonoBehaviour
 				if (target == _target)
 					continue;
 
-				float distanceToNewTarget = Vector3.Distance(target.transform.position, transform.position);
+				float distanceToNewTarget = Vector3.Distance(target.HomingPoint, transform.position);
 
 				// If the target has a higher importance or if it's just closer (or if we're ignoring priority), pick it instead
 				bool higherPriority = target.Priority > targetPriority;
@@ -161,12 +161,13 @@ public class LemmingMove : MonoBehaviour
 			if (t == _target)
 				return true;
 
-			bool radiiOverlap = Utility.OverlapCircle(t.transform.position, t.Priority, transform.position, visionDistance);
+			bool radiiOverlap = Utility.OverlapCircle(t.HomingPoint, t.Priority, transform.position, visionDistance);
 			if (!radiiOverlap)
 				return false;
-			
+
 			// Check if there's a wall or other RaycastBlocker between us and the target
-			var raycastHit = Physics2D.Raycast(transform.position, t.transform.position - transform.position, Mathf.Infinity, _raycastBlockers);
+			float distToTarget = Vector3.Distance(transform.position, t.HomingPoint);
+			var raycastHit = Physics2D.Raycast(transform.position, t.HomingPoint - transform.position, distToTarget, _raycastBlockers);
 			bool hasLOS = !raycastHit;
 			if (!hasLOS)
 				return false;

@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private Transform _aimTarget;
 	[SerializeField] private LayerMask _aimLayer;
 
-	private PowerSocket _activePowerSocket;
+	private PoweredItem _activePowerSocket;
 	private Rigidbody2D _rb;
 	private List<GameObject> _pips = new();
 	private Vector2 _movement;
@@ -134,7 +134,7 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (!other.TryGetComponent(out PowerSocket socket))
+		if (!other.TryGetComponent(out PoweredItem socket))
 			return;
 
 		if (_activePowerSocket != null)
@@ -150,7 +150,7 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D other)
 	{
-		if (!other.TryGetComponent(out PowerSocket socket))
+		if (!other.TryGetComponent(out PoweredItem socket))
 			return;
 
 		if (_activePowerSocket == null || _activePowerSocket != socket)
