@@ -6,8 +6,10 @@ public class PowerSocket : MonoBehaviour
 	[SerializeField] private int _maxCharges = 5;
 	[SerializeField, DynamicRange(nameof(_minCharges), nameof(_maxCharges))] private int _charges = 3;
 
-	protected int MinCharges => _minCharges;
-	protected int MaxCharges => _maxCharges;
+	public int MinCharges => _minCharges;
+	public int MaxCharges => _maxCharges;
+
+	public virtual bool IsPowered => Charges > 0;
 
 	public virtual int Charges
 	{

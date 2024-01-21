@@ -52,11 +52,11 @@ MonoBehaviour:
   _randomTimeMin: 2
   _randomTimeMax: 5
   _arrivedDistance: 0.5
-  _calmVisionDistance: 3
+  _calmVisionDistance: 5
   _scaredVisionDistance: Infinity
   _raycastBlockers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!50 &440143291592822319
 Rigidbody2D:
   serializedVersion: 4

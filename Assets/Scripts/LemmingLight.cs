@@ -50,10 +50,14 @@ public class LemmingLight : PowerSocket
 		}
 		for (float t = 0; t < transitionTime; t += Time.deltaTime)
 		{
-			_light.pointLightOuterRadius = start + (diff * Mathf.InverseLerp(0, transitionTime, t));
+			float normalized = t / transitionTime;
+			_light.intensity = 1 + (Charges / (float) MaxCharges * normalized);
+			_light.pointLightOuterRadius = start + (diff * normalized);
+			_light.pointLightInnerRadius = _light.pointLightOuterRadius * 0.5f;
 			yield return new WaitForEndOfFrame();
 		}
 		_light.pointLightOuterRadius = newIntensity;
+		_light.pointLightInnerRadius = _light.pointLightOuterRadius * 0.5f;
 		_lightLerpHandle = null;
 	}
 
@@ -85,7 +89,9 @@ public class LemmingLight : PowerSocket
 		if (!_light)
 			return;
 
+		_light.intensity = 1 + (Charges / (float) MaxCharges);
 		_light.pointLightOuterRadius = Charges;
+		_light.pointLightInnerRadius = _light.pointLightOuterRadius * 0.5f;
 	}
 #endif
 }
