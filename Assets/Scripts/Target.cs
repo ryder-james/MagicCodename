@@ -1,30 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Target : MonoBehaviour
 {
-    [SerializeField, Range(0, 5)] private int priority = 0;
-    [SerializeField] private LemmingLight light;
-    
-    public int getPriority()
-    {
-        return priority;
-    }
+	[SerializeField, FormerlySerializedAs("_source")] private PowerSocket _sourceSocket;
 
-    public void setPriority(int newprio)
-    {
-        if (newprio >= 0 && newprio <= 5)
-        {
-            priority = newprio;
-        }
-        else
-        {
-            Debug.LogWarning($"Tried to set priority of a {name} to {newprio} when the range is 0-5");
-        }
-    }
-    private void Update()
-    {
-        setPriority(light.Intensity);
-    }
+	public int Priority
+	{
+		get => _sourceSocket.Charges;
+		set => _sourceSocket.Charges = value;
+	}
 }
